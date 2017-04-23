@@ -1,3 +1,6 @@
+//error when come to second round
+//possible moves error
+//still searching for the bug
 
 //board size
 var width = 8;
@@ -8,9 +11,12 @@ var piecewidth = 40;
 var pieceheight = 40;
 
 //variable to hold the data
-var board = new Array();	//hold the board pieces
-var pieces = new Array();	//hold the player pieces
-var moves;					//hold the possible moves
+var board = new Array();		//hold the board pieces
+var blackPieces = new Array();	//hold the black pieces
+var whitePieces = new Array();	//hold the black pieces
+var moves = new Array();		//hold the possible moves
+var flipColor;					//the opposite color of the player
+var pieces;						//2nd save array of player pieces
 
 //settings
 var player = "black";
@@ -40,7 +46,8 @@ function loadBoard(){
 	document.write("</table>");
 	
 	//save the black piece location
-	pieces = [[3,4],[4,3]];
+	blackPieces = [[3,4],[4,3]];
+	whitePieces = [[3,3],[4,4]];
 	
 	//show the possible moves
 	showMoves();
@@ -56,22 +63,45 @@ function putColor(x, y){
 		square.setAttribute("bgColor", player);
 		//flip
 		flip(x, y);
+		
+		//if black turn the pieces is black else otherwise
+		if(player == "black"){
+			//array contain player pieces
+			pieces = blackPieces;
+		}else{
+			//array contain player pieces
+			pieces = whitePieces;
+		}
+		
 		board[x][y] = player;
-		pieces[pieces.length] = [x, y];
+		pieces.push([x, y]);
+		endTurn();
 	}	
 }
 
 //check can color be put or not
 function canPutColor(x, y){
 	if(board[x][y] != "grey") return false;
-	if(turn != player) return false;
+	//if(turn != player) return false;
 	return true;
 }
 
+//
+//missing diagonal check
+//
 //check every possible moves for a color
 function possibleMoves(){
-	//create an array to hold the possible moves
-	var posMoves = new Array();
+	//if black turn the flip piece is white else otherwise
+	if(player == "black"){
+		flipColor = "white";
+		//array contain player pieces
+		pieces = blackPieces;
+	}else{
+		flipColor = "black";
+		//array contain player pieces
+		pieces = whitePieces;
+	}
+	
 	//index to save the possible move
 	var i = 0;
 	var x;
@@ -81,76 +111,81 @@ function possibleMoves(){
 	for(j = 0; j < pieces.length; j++){
 		x = pieces[j][0];
 		y = pieces[j][1];
-		//if the right piece is white, look through to the right
-		if(x + 2 < width && board[x + 1][y] == "white"){
+		
+		//if x or y is -1 skip
+		if(x == -1 || y == -1){
+			continue;
+		}
+		
+		//if the right piece is opposite color, look through to the right
+		if(x + 2 < width && board[x + 1][y] == flipColor){
 			for(x_pos = x + 2; x_pos < width; x_pos++){
 				//if the color is green put it in the possible moves array
 				if(board[x_pos][y] == "green"){
-					posMoves[i] = [x_pos, y];
+					moves[i] = [x_pos, y];
 					i++;
 					break;
 				}
 				//if black stop
-				if(board[x_pos][y] == "black"){
+				if(board[x_pos][y] == player){
 					break;
 				}
 			}
 		}
 		//the same for down, left, and up
 		//down
-		if(y + 2 < height && board[x][y + 1] == "white"){
+		if(y + 2 < height && board[x][y + 1] == flipColor){
 			for(y_pos = y + 2; y_pos < height; y_pos++){
 				//if the color is green put it in the possible moves array
 				if(board[x][y_pos] == "green"){
-					posMoves[i] = [x, y_pos];
+					moves[i] = [x, y_pos];
 					i++;
 					break;
 				}
 				//if black stop
-				if(board[x][y_pos] == "black"){
+				if(board[x][y_pos] == player){
 					break;
 				}
 			}
 		}
 		//left
-		if(x - 2 >= 0 && board[x - 1][y] == "white"){
+		if(x - 2 >= 0 && board[x - 1][y] == flipColor){
 			for(x_pos = x - 2; x_pos >= 0; x_pos--){
 				//if the color is green put it in the possible moves array
 				if(board[x_pos][y] == "green"){
-					posMoves[i] = [x_pos, y];
+					moves[i] = [x_pos, y];
 					i++;
 					break;
 				}
 				//if black stop
-				if(board[x_pos][y] == "black"){
+				if(board[x_pos][y] == player){
 					break;
 				}
 			}
 		}
 		//up
-		if(y - 2 >= 0  && board[x][y - 1] == "white"){
+		if(y - 2 >= 0  && board[x][y - 1] == flipColor){
 			for(y_pos = y - 2; y_pos >= 0; y_pos--){
 				//if the color is green put it in the possible moves array
 				if(board[x][y_pos] == "green"){
-					posMoves[i] = [x, y_pos];
+					moves[i] = [x, y_pos];
 					i++;
 					break;
 				}
 				//if black stop
-				if(board[x][y_pos] == "black"){
+				if(board[x][y_pos] == player){
 					break;
 				}
 			}
 		}
 	}
-	
-	return posMoves;
 }
 
 //to show all of the possible moves for player
 function showMoves(){
+
 	//search the possible moves
-	moves = possibleMoves();
+	possibleMoves();
 	//declare some variables
 	var id;
 	var square;
@@ -170,6 +205,17 @@ function showMoves(){
 
 //flip the color
 function flip(x, y){
+	//if black turn the flip piece is white else otherwise
+	if(player == "black"){
+		flipColor = "white";
+		//array contain player pieces
+		pieces = blackPieces;
+	}else{
+		flipColor = "black";
+		//array contain player pieces
+		pieces = whitePieces;
+	}
+	
 	//flip direction
 	var right = false;
 	var left = false;
@@ -179,8 +225,17 @@ function flip(x, y){
 	var id;
 	var square;
 	
-	//find the black pieces
+	//save new pieces location
+	var newPieces = new Array();
+	var p = 0;
+	
+	//find the opposite pieces correspon to the possible moves
 	for(i = 0; i < pieces.length; i++){
+		//if x or y is -1 skip
+		if(pieces[i][0] == -1 || pieces[i][1] == -1){
+			continue;
+		}
+		
 		//if it is in the same y axis
 		if(!left && !right && pieces[i][1] == y){
 			//check it is on right or left
@@ -205,46 +260,96 @@ function flip(x, y){
 	
 	//flip correspon to the direction
 	if(right){
-		for(x_pos = x + 1; board[x_pos][y] == "white"; x_pos++){
+		for(x_pos = x + 1; board[x_pos][y] == flipColor; x_pos++){
 			//change the color to black
 			id = "[" + x_pos + "," + y + "]";
 			square = document.getElementById(id);
-			square.setAttribute("bgColor", "black");
-			board[x_pos][y] = "black";
-			pieces[pieces.length] = [x_pos, y];
+			square.setAttribute("bgColor", player);
+			board[x_pos][y] = player;
+			pieces.push([x_pos, y]);
+			newPieces[p] = [x_pos, y];
+			p++;
 		}
 	}
 	if(left){
-		for(x_pos = x - 1; board[x_pos][y] == "white"; x_pos--){
+		for(x_pos = x - 1; board[x_pos][y] == flipColor; x_pos--){
 			//change the color to black
 			id = "[" + x_pos + "," + y + "]";
 			square = document.getElementById(id);
-			square.setAttribute("bgColor", "black");
-			board[x_pos][y] = "black";
-			pieces[pieces.length] = [x_pos, y];
+			square.setAttribute("bgColor", player);
+			board[x_pos][y] = player;
+			pieces.push([x_pos, y]);
+			newPieces[p] = [x_pos, y];
+			p++;
 		}
 	}if(down){
-		for(y_pos = y + 1; board[x][y_pos] == "white"; y_pos++){
+		for(y_pos = y + 1; board[x][y_pos] == flipColor; y_pos++){
 			//change the color to black
 			id = "[" + x + "," + y_pos + "]";
 			square = document.getElementById(id);
-			square.setAttribute("bgColor", "black");
-			board[x][y_pos] = "black";
-			pieces[pieces.length] = [x, y_pos];
+			square.setAttribute("bgColor", player);
+			board[x][y_pos] = player;
+			pieces.push([x, y_pos]);
+			newPieces[p] = [x, y_pos];
+			p++;
 		}
 	}if(up){
-		for(y_pos = y - 1; board[x][y_pos] == "white"; y_pos--){
+		for(y_pos = y - 1; board[x][y_pos] == flipColor; y_pos--){
 			//change the color to black
 			id = "[" + x + "," + y_pos + "]";
 			square = document.getElementById(id);
-			square.setAttribute("bgColor", "black");
-			board[x][y_pos] = "black";
-			pieces[pieces.length] = [x, y_pos];
+			square.setAttribute("bgColor", player);
+			board[x][y_pos] = player;
+			pieces.push([x, y_pos]);
+			newPieces[p] = [x, y_pos];
+			p++;
 		}
 	}
 	
+	//remove opponent pieces
+	removeOpponent(newPieces);
+	
 	//remove the previous possible moves
 	removeMoves(x, y);
+}
+
+//remove opponent pieces
+function removeOpponent(locs){
+	//if black turn the flip piece is white else otherwise
+	if(player == "black"){
+		//array contain opponent pieces
+		pieces = whitePieces;
+	}else{
+		//array contain opponent pieces
+		pieces = blackPieces;
+	}
+	
+	//flipped pieces location
+	var x;
+	var y;
+	//opponent pieces location
+	var xOpp;
+	var yOpp;
+	
+	//look through the newPieces array
+	for(i = 0; i < locs.length; i++){
+		x = locs[i][0];
+		y = locs[i][1];
+		
+		//look through opponent pieces array
+		for(j = 0; j < pieces.length; j++){
+			xOpp = pieces[j][0];
+			yOpp = pieces[j][1];
+			
+			//if it has the same location delete
+			if(x == xOpp && y == yOpp){
+				//-1 represent empty
+				pieces[j][0] = -1;
+				pieces[j][1] = -1;
+				break;
+			}
+		}
+	}
 }
 
 //remove the previous possible moves
@@ -267,4 +372,16 @@ function removeMoves(x, y){
 	
 	//clear the array
 	moves = [];
+}
+
+//change the player
+function endTurn(){
+	if(turn == "black"){
+		turn = "white";
+		player = "white";
+	}else{
+		turn = "black";
+		player = "black";
+	}
+	showMoves();
 }
