@@ -1,3 +1,5 @@
+//no game over condition yet
+
 //board size
 var width = 8;
 var height = 8;
@@ -20,18 +22,6 @@ score["white"] = 0;				//white piece score
 //settings
 var player = "black";
 var turn = "black";
-
-//show information whose turn
-function showInfo(){
-	document.write("<h2>Turn: <span id='turn'>" + turn + "</span></h2>");
-	document.write("<h2>Player: <span id='player'>" + player + "</span></h2>");
-}
-
-//show score for both black and white
-function scoreInfo(){
-	document.write("<h2 class='score'>Black: <span id='bscore'>2</span></h2>");
-	document.write("<h2 class='score'>White: <span id='wscore'>2</span></h2>");
-}
 
 //load the board
 function loadBoard(){
@@ -66,7 +56,6 @@ function loadBoard(){
 		
 	//show the possible moves
 	showMoves();
-	
 }
 
 //change the color on the clicked square
@@ -551,14 +540,6 @@ function endTurn(finish){
 		player = "black";
 	}
 	
-	//renew the turn
-	document.getElementById("turn").textContent = turn;
-	document.getElementById("player").textContent = player;
-	
-	//renew the score
-	document.getElementById("bscore").textContent = score["black"];
-	document.getElementById("wscore").textContent = score["white"];
-	
 	//if board is full game over
 	if(score["black"] + score["white"] == 64){
 		gameOver();
@@ -579,12 +560,9 @@ function endTurn(finish){
 function gameOver(){
 	if(score["black"] > score["white"]){
 		alert("black wins");
-		player = 0;
 	}else if(score["black"] == score["white"]){
 		alert("it's a draw");
-		player = 0;
 	}else{
 		alert("white wins");
-		player = 0;
 	}
 }
