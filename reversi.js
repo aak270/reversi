@@ -1,5 +1,3 @@
-//no game over condition yet
-
 //board size
 var width = 8;
 var height = 8;
