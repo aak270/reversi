@@ -1,30 +1,40 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 
-<title>Reversi Online ver. 0.01</title>
+<meta charset="utf-8">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="HandheldFriendly" content="True">
 
-<script type="text/javascript" src="reversi.js"></script>
+<title>Play Reversi Online</title>
+
+<link rel="stylesheet" type="text/css" href="style/main.css" />
 
 </head>
 <body>
 
-<script type="text/javascript">
+<div class="site">
 
-//load board
-loadBoard();
-/*
-var blackPieces = [[3,4],[4,3]];
-var whitePieces = [[3,3],[4,4]];
+<div class="header">
+	<a href="index.html"><img src="img/home.png" class="home"></a>
+</div>
 
-var pieces = blackPieces;
-pieces[2] = [5,4];
-pieces = whitePieces;
-pieces = [];
+<div class="content">
+	<img src="img/logo1.png" class="logo">
+	<img src="img/logo2.png" class="logo">
 
-document.write("<p>"+pieces[1]+"</p>");
-*/
-</script>
+	<button type="button" class="btn" onclick="location.href='play.html';">PLAY</button>
+	<button type="button" class="btn">HOW TO PLAY</button>
+	<button type="button" class="btn">ABOUT</button>
+</div>
 
+<div class="footer">
+	
+</div>
+
+</div>
 
 </body>
 </html>
