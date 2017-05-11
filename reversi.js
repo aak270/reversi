@@ -17,6 +17,14 @@ var score = [];					//hold the score
 score["black"] = 0;				//black piece score
 score["white"] = 0;				//white piece score
 
+//set picture source
+var picture = new Array();
+picture["white"] = "img/white.png";
+picture["black"] = "img/black.png";
+picture["white_trans"] = "img/white_trans.png";
+picture["black_trans"] = "img/black_trans.png";
+picture["green"] = "img/blank.png";
+
 //settings
 var player = "black";
 var turn = "black";
@@ -40,7 +48,7 @@ function loadBoard(){
 		board[x] = new Array();
 	}
 	
-	document.write("<table border='1'>");
+	document.write('<table border="0" cellpadding="0" cellspacing="0" bgcolor="green">');
 	//rows
 	for(y = 0; y < height; y++){
 		document.write("<tr>");
@@ -49,7 +57,7 @@ function loadBoard(){
 			if((x == 3 && y == 3) || (x == 4 && y == 4)) color = "white";
 			else if((x == 3 && y == 4) || (x == 4 && y == 3)) color = "black";
 			else color = "green";
-			document.write("<td id='[" + x + "," + y + "]' bgColor='" + color + "' height='" + pieceheight + "' width='" + piecewidth + "' onclick='putColor(" + x +", " + y + ")'></td>");
+			document.write("<td><img src='" + picture[color] + "' id='[" + x + "," + y + "]' onclick='putColor(" + x +", " + y + ")'></td>");
 			board[x][y] = color;
 		}
 		document.write("</tr>");
@@ -67,39 +75,35 @@ function loadBoard(){
 	//show the possible moves
 	showMoves();
 	
+	return 0;
 }
 
-//change the color on the clicked square
-function putColor(x, y){
-	//check can we put color or no
-	if(canPutColor(x, y)){
-		var id = "[" + x + "," + y + "]";
-		var square = document.getElementById(id);
-		square.setAttribute("bgColor", player);
-		score[player]++;
-		//flip
-		flip(x, y);
-		
-		//if black turn the pieces is black else otherwise
-		if(player == "black"){
-			//array contain player pieces
-			pieces = blackPieces;
-		}else{
-			//array contain player pieces
-			pieces = whitePieces;
-		}
-		
-		board[x][y] = player;
-		pieces.push([x, y]);
-		endTurn(false);
-	}	
-}
+//to show all of the possible moves for player
+function showMoves(){
 
-//check can color be put or not
-function canPutColor(x, y){
-	if(board[x][y] != "grey") return false;
-	//if(turn != player) return false;
-	return true;
+	//search the possible moves
+	possibleMoves();
+	//declare some variables
+	var id;
+	var x;
+	var y;
+	
+	//if player black show black transparant else otherwise
+	if(player == "black"){
+		poscol = picture["black_trans"];
+	}else{
+		poscol = picture["white_trans"];
+	}
+	
+	//look through the array
+	for(i = 0; i < moves.length; i++){
+		x = moves[i][0];
+		y = moves[i][1];
+		id = "[" + x + "," + y + "]";
+		document.getElementById(id).src = poscol;
+		board[x][y] = "grey";
+	}
+	return 0;
 }
 
 //check every possible moves for a color
@@ -260,28 +264,40 @@ function possibleMoves(){
 			}
 		}
 	}
+	return 0;
 }
 
-//to show all of the possible moves for player
-function showMoves(){
+//change the color on the clicked square
+function putColor(x, y){
+	//check can we put color or no
+	if(canPutColor(x, y)){
+		var id = "[" + x + "," + y + "]";
+		document.getElementById(id).src = picture[player];
+		score[player]++;
+		//flip
+		flip(x, y);
+		
+		//if black turn the pieces is black else otherwise
+		if(player == "black"){
+			//array contain player pieces
+			pieces = blackPieces;
+		}else{
+			//array contain player pieces
+			pieces = whitePieces;
+		}
+		
+		board[x][y] = player;
+		pieces.push([x, y]);
+		endTurn(false);
+		
+	}	
+}
 
-	//search the possible moves
-	possibleMoves();
-	//declare some variables
-	var id;
-	var square;
-	var x;
-	var y;
-	
-	//look through the array
-	for(i = 0; i < moves.length; i++){
-		x = moves[i][0];
-		y = moves[i][1];
-		id = "[" + x + "," + y + "]";
-		square = document.getElementById(id);
-		square.setAttribute("bgColor", "grey");
-		board[x][y] = "grey";
-	}
+//check can color be put or not
+function canPutColor(x, y){
+	if(board[x][y] != "grey") return false;
+	if(turn != player) return false;
+	return true;
 }
 
 //flip the color
@@ -298,7 +314,6 @@ function flip(x, y){
 	}
 	
 	var id;
-	var square;
 	
 	//save new pieces location
 	var newPieces = new Array();
@@ -364,8 +379,7 @@ function flip(x, y){
 		for(x_pos = x + 1; board[x_pos][y] == flipColor; x_pos++){
 			//change the color to player color
 			id = "[" + x_pos + "," + y + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y] = player;
@@ -378,8 +392,7 @@ function flip(x, y){
 		for(x_pos = x - 1; board[x_pos][y] == flipColor; x_pos--){
 			//change the color to player color
 			id = "[" + x_pos + "," + y + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y] = player;
@@ -392,8 +405,7 @@ function flip(x, y){
 		for(y_pos = y + 1; board[x][y_pos] == flipColor; y_pos++){
 			//change the color to player color
 			id = "[" + x + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x][y_pos] = player;
@@ -406,8 +418,7 @@ function flip(x, y){
 		for(y_pos = y - 1; board[x][y_pos] == flipColor; y_pos--){
 			//change the color to player color
 			id = "[" + x + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x][y_pos] = player;
@@ -420,8 +431,7 @@ function flip(x, y){
 		for(x_pos = x + 1, y_pos = y - 1; board[x_pos][y_pos] == flipColor; x_pos++, y_pos--){
 			//change the color to player color
 			id = "[" + x_pos + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y_pos] = player;
@@ -434,8 +444,7 @@ function flip(x, y){
 		for(x_pos = x - 1, y_pos = y - 1; board[x_pos][y_pos] == flipColor; x_pos--, y_pos--){
 			//change the color to player color
 			id = "[" + x_pos + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y_pos] = player;
@@ -448,8 +457,7 @@ function flip(x, y){
 		for(x_pos = x + 1, y_pos = y + 1; board[x_pos][y_pos] == flipColor; x_pos++, y_pos++){
 			//change the color to player color
 			id = "[" + x_pos + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y_pos] = player;
@@ -462,8 +470,7 @@ function flip(x, y){
 		for(x_pos = x - 1, y_pos = y + 1; board[x_pos][y_pos] == flipColor; x_pos--, y_pos++){
 			//change the color to player color
 			id = "[" + x_pos + "," + y_pos + "]";
-			square = document.getElementById(id);
-			square.setAttribute("bgColor", player);
+			document.getElementById(id).src = picture[player];
 			score[player]++;
 			score[flipColor]--;
 			board[x_pos][y_pos] = player;
@@ -478,6 +485,8 @@ function flip(x, y){
 	
 	//remove the previous possible moves
 	removeMoves(x, y);
+	
+	return 0;
 }
 
 //remove opponent pieces
@@ -517,6 +526,7 @@ function removeOpponent(locs){
 			}
 		}
 	}
+	return 0;
 }
 
 //remove the previous possible moves
@@ -532,13 +542,14 @@ function removeMoves(x, y){
 		}
 		
 		id = "[" + x_pos + "," + y_pos + "]";
-		square = document.getElementById(id);
-		square.setAttribute("bgColor", "green");
+		document.getElementById(id).src = picture["green"];
 		board[x_pos][y_pos] = "green";
 	}
 	
 	//clear the array
 	moves = [];
+	
+	return 0;
 }
 
 //change the player
@@ -562,6 +573,7 @@ function endTurn(finish){
 	//if board is full game over
 	if(score["black"] + score["white"] == 64){
 		gameOver();
+		return 0;
 	}
 	
 	showMoves();
@@ -570,9 +582,11 @@ function endTurn(finish){
 		//if skipped twice game over
 		if(finish){
 			gameOver();
+			return 0;
 		}
 		endTurn(true);
 	}
+	return 0;
 }
 
 //game is over
@@ -587,4 +601,5 @@ function gameOver(){
 		alert("white wins");
 		player = 0;
 	}
+	return 0;
 }

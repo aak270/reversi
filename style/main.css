@@ -17,6 +17,8 @@ div.header{
 }
 div.content{
 	text-align: center;
+	max-width: 1000px;
+	margin: auto;
 }
 img.logo{
 	max-width: 100%;
@@ -48,4 +50,14 @@ table{
 .score{
 	display: inline;
 	padding: 40px;
+}
+td img{
+	vertical-align: middle;
+}
+
+ol{
+	text-align: left;
+}
+li{
+	margin-bottom: 10px;
 }
