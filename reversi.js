@@ -141,7 +141,6 @@ function possibleMoves(){
 				if(board[x_pos][y] == "green"){
 					moves[i] = [x_pos, y];
 					i++;
-					right = true;
 					break;
 				}
 				//if same as player
@@ -158,7 +157,6 @@ function possibleMoves(){
 				if(board[x][y_pos] == "green"){
 					moves[i] = [x, y_pos];
 					i++;
-					down = true;
 					break;
 				}
 				//if same as player
@@ -174,7 +172,6 @@ function possibleMoves(){
 				if(board[x_pos][y] == "green"){
 					moves[i] = [x_pos, y];
 					i++;
-					left = true;
 					break;
 				}
 				//if same as player
@@ -190,7 +187,6 @@ function possibleMoves(){
 				if(board[x][y_pos] == "green"){
 					moves[i] = [x, y_pos];
 					i++;
-					up = true;
 					break;
 				}
 				//if same as player
@@ -206,7 +202,6 @@ function possibleMoves(){
 				if(board[x_pos][y_pos] == "green"){
 					moves[i] = [x_pos, y_pos];
 					i++;
-					upright = true;
 					break;
 				}
 				//if same as player
@@ -222,7 +217,6 @@ function possibleMoves(){
 				if(board[x_pos][y_pos] == "green"){
 					moves[i] = [x_pos, y_pos];
 					i++;
-					downright = true;
 					break;
 				}
 				//if same as player
@@ -238,7 +232,6 @@ function possibleMoves(){
 				if(board[x_pos][y_pos] == "green"){
 					moves[i] = [x_pos, y_pos];
 					i++;
-					upleft = true;
 					break;
 				}
 				//if same as player
@@ -254,7 +247,6 @@ function possibleMoves(){
 				if(board[x_pos][y_pos] == "green"){
 					moves[i] = [x_pos, y_pos];
 					i++;
-					downleft = true;
 					break;
 				}
 				//if same as player
