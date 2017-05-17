@@ -1,7 +1,7 @@
 # About
 This project is about a javascript implementation of a board game reversi, also known as othello.
 This project can be accessed online at [my site](aak270.github.io/reversi/). 
-More about reversi; how to play, rule, etc. can be viewed at [wikipedia](https://en.wikipedia.org/wiki/Reversi)
+More about reversi; how to play, rule, etc. can be viewed at [wikipedia](https://en.wikipedia.org/wiki/Reversi).
 
 # Code Example
 The javascript functions can be viewed at [reversi.js](https://aak270.github.io/reversi/reversi.js) in the or in the repository.
